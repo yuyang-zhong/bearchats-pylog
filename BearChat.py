@@ -3,16 +3,16 @@ import os
 
 ### Utilities ###
 cond = ["no so well", "alright", "well", "very well"]
-he = ["he", "him", "his"]
-she = ["she", "her", "her"]
-they = ["they", "their", "their"]
+he = ["he", "his", "He", "His", "him"]
+she = ["she", "her", "She", "Her", "her"]
+they = ["they", "their", "They", "Their", "them"]
 tobes = ["is", "are"]
-live = ["does not have plans yet",
+live = ["does not yet have plans",
         "currently looking", 
-        "alreay found"]
-places = ["on campus residence hall", 
-            "on campus appartment", 
-            "off campus appartment"]
+        "alreay found housing"]
+places = ["on-campus residence hall", 
+            "on-campus appartment", 
+            "off-campus appartment"]
 
 
 class BearChats():
@@ -136,9 +136,6 @@ class BearChats():
                 self.new_habit = input("** New study habit(s): \n>")
                 print("")
 
-            else:
-                self.habit_change = False
-
         else:
             print("New stuby habit(s): %s", self.new_habit)
 
@@ -223,7 +220,7 @@ class BearChats():
                 print("")
             # add in error for entering non integer
 
-            self.class_cond = cond[relate_index - 1]
+            self.relationship = cond[relate_index - 1]
 
             notes = input("** Notes on relationships (NA if none): \n>")
             print("")
@@ -233,7 +230,7 @@ class BearChats():
 
         else:
             print("Relationships with floor/roommates are %s. Notes: %s", 
-                self.relationships, self.relate_note)
+                self.relationship, self.relate_note)
 
 
     def ask_concerns(self):
@@ -252,39 +249,101 @@ class BearChats():
         self.report = ""
 
         # Name
-        self.report += "Resident Name: %s %s\\n\\n" \
+        self.report += "Resident Name: %s %s\n\n" \
                         %(self.fn, self.ln)
         
+        self.report += "*** General Notes *** \n"
+
         # Classes
         self.report += "%s %s doing %s in %s classes" \
                         %(self.fn, self.tobe, self.class_cond, self.pronoun[1])
         if self.class_note:
-            self.report += ", and %s said that %s." %(self.pronoun[0], self.class_note)
-        else: 
-            self.report += ". "
+            self.report += ", and %s said that %s" \
+                        %(self.pronoun[0], self.class_note)
+        
+        self.report += ". "
 
-        #
+        # Habits
+        if self.habit_change:
+            self.report += "%s mentioned that %s found %s" \
+                            %(self.pronoun[2], self.pronoun[0], self.new_habit) \
+                            + " to be particular useful studying. "
+
+        # Resources
+        if self.resources:
+            self.report += "Resources like %s were quite helpful for %s as well. " \
+                            %(self.resources, self.pronoun[4])
+
+        # Success + Goals
+        if self.success:
+            self.report += "%s thought that %s biggest success last semester was %s," \
+                            %(self.pronoun[2], self.pronoun[1], self.success)
+
+            self.report += " and for this semester, %s wanted to %s" \
+                            %(self.pronoun[0], self.goal1)
+
+            if self.goal2 and not self.goal3:
+                self.report += " and %s" %self.goal2
+
+            if self.goal2 and self.goal3:
+                self.report += ", %s, and %s" %(self.goal2, self.goal3)
+
+            self.report += ". "
+        
+        # Living
+        if self.living and self.place:
+            if self.living == live[1]:
+                self.report += "In terms of living plans for next year, %s said that %s %s %s, and " \
+                            %(self.fn, self.pronoun[0], self.tobe, self.living)
+            else:
+                self.report += "In terms of living plans for next year, %s said that %s %s, and " \
+                            %(self.fn, self.pronoun[0], self.living)
+
+            self.report += "planning to live in %s. " %self.place
+
+        # Relationships
+        if self.relationship:
+            self.report += "%s relationship with %s roommates and floormates are %s" \
+                        %(self.pronoun[3], self.pronoun[1], self.relationship)
+
+        if self.relate_note:
+            self.report += ", and said that %s" %self.relate_note
+        
+        self.report += ". "
+
+        # Concerns
+        self.report += "\n\n*** Concerns ***\n"
+
+        if self.concerns:
+            self.report += "%s" %self.concerns
+
+        else:
+            self.report += "No concerns. \n\n"
+
+        # End of Message
+        self.report += "------ End of Bear Chat Log for %s ------\n" %self.name
+        self.report += "%s" %self.time
+
 
 
     def send_email(self):
-        send = input("** Send email to ra-yuyang@berkeley.edu? (y/n): ")
+        send = input("** Send email to ra-yuyang@berkeley.edu? (y/n/a): ")
         print("")
 
-        while send not in ["y", "n"]:
+        while send not in ["y", "n", "a"]:
             print("Invalid Argument. Try Again.") 
             send = input("** Send email to ra-yuyang@berkeley.edu? (y/n/a): ")
-            print("")
 
         if send == "y":
             print("Sending Email...")
-            os.system("echo %s | mail -s 'Bear Chat Log (%s)' ra-yuyang@berkeley.edu" 
+            os.system("echo '%s' | mail -s 'Bear Chat Log (%s)' ra-yuyang@berkeley.edu" 
                 % (self.report, self.name))
             print("Email Sent.")
 
         elif send == "a":
             email = input("** Enter an alternative email address: ")
             print("Sending Email...")
-            os.system("echo %s | mail -s 'Bear Chat Log (%s)' %s" 
+            os.system("echo '%s' | mail -s 'Bear Chat Log (%s)' %s" 
                 % (self.report, self.name, email))
             print("Email Sent.")
 
@@ -300,10 +359,9 @@ class BearChats():
         while copy not in ["y", "n"]:
             print("Invalid Argument. Try Again.") 
             copy = input("** Copy to clipboard? (y/n): ")
-            print("")
 
         if copy == "y":
-            os.system("echo %s | pbcopy" %self.report)
+            os.system("echo '%s' | pbcopy" %self.report)
             print("Log copied to clipboard.")
 
 
