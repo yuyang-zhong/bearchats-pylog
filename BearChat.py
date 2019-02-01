@@ -303,7 +303,7 @@ class BearChats():
 
         # Relationships
         if self.relationship:
-            self.report += "%s relationship with %s roommates and floormates are %s" \
+            self.report += "%s relationships with %s roommates and floormates are %s" \
                         %(self.pronoun[3], self.pronoun[1], self.relationship)
 
         if self.relate_note:
