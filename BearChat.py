@@ -1,5 +1,6 @@
 import datetime
 import os
+import time
 
 ### Utilities ###
 cond = ["no so well", "alright", "well", "very well"]
@@ -345,6 +346,7 @@ class BearChats():
             print("Sending Email...")
             os.system("echo '%s' | mail -s 'Bear Chat Log (%s)' %s" 
                 % (self.report, self.name, email))
+            time.pause(3)
             print("Email Sent.")
 
         else:
