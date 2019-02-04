@@ -10,7 +10,7 @@ they = ["they", "their", "They", "Their", "them"]
 tobes = ["is", "are"]
 live = ["does not yet have plans",
         "currently looking", 
-        "alreay found housing"]
+        "already found housing"]
 places = ["on-campus residence hall", 
             "on-campus appartment", 
             "off-campus appartment"]
